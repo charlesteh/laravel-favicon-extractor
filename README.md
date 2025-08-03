@@ -5,6 +5,8 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/stefanbauer/laravel-favicon-extractor.svg?style=flat-square)](https://packagist.org/packages/stefanbauer/laravel-favicon-extractor)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
 
+Note: this a fork to add support for latest Laravel & PHP versions (fully untested).
+
 This package provides a convenient way to extract a favicon from any website by using the appropriate Google service. It allows you to fetch and save it to your local storage.
 
 ## Usage
