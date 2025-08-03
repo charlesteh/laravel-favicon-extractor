@@ -50,7 +50,8 @@ FaviconExtractor::fromUrl('https://laravel.com')->fetchAndSaveTo('favicons', 'my
 To install this package, require it via composer.
 
 ```shell
-$ composer require stefanbauer/laravel-favicon-extractor
+$ composer config repositories.laravel-favicon-extractor vcs https://github.com/charlesteh/laravel-favicon-extractor.git
+$ composer require charlesteh/laravel-favicon-extractor:dev-master
 ```
 
 Thanks to Laravel 5.5+ Package Auto-Discovery, there is no need to add the ServiceProvider manually. If you don't use auto-discovery, add the ServiceProvider to the providers array in `config/app.php`.
