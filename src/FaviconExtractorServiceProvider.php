@@ -9,6 +9,7 @@ use StefanBauer\LaravelFaviconExtractor\Favicon\FaviconFactory;
 use StefanBauer\LaravelFaviconExtractor\Favicon\FaviconFactoryInterface;
 use StefanBauer\LaravelFaviconExtractor\Generator\FilenameGeneratorInterface;
 use StefanBauer\LaravelFaviconExtractor\Provider\ProviderInterface;
+use StefanBauer\LaravelFaviconExtractor\Processor\ImageProcessorInterface;
 
 class FaviconExtractorServiceProvider extends ServiceProvider
 {
@@ -31,6 +32,11 @@ class FaviconExtractorServiceProvider extends ServiceProvider
         $this->app->bind(
             FilenameGeneratorInterface::class,
             config('favicon-extractor.filename_generator_class')
+        );
+
+        $this->app->bind(
+            ImageProcessorInterface::class,
+            config('favicon-extractor.image_processor_class')
         );
 
         $this->app->bind(

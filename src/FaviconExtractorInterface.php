@@ -8,7 +8,7 @@ use StefanBauer\LaravelFaviconExtractor\Favicon\FaviconInterface;
 
 interface FaviconExtractorInterface
 {
-    public function fromUrl(string $url): self;
+    public function fromUrl(string $url, int $size = 128): self;
     public function getUrl(): string;
     public function fetchOnly(): FaviconInterface;
     public function fetchAndSaveTo(string $path, string $filename = null): string;

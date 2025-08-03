@@ -5,9 +5,15 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/stefanbauer/laravel-favicon-extractor.svg?style=flat-square)](https://packagist.org/packages/stefanbauer/laravel-favicon-extractor)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
 
-Note: this a fork to add support for latest Laravel & PHP versions (fully untested).
+Note: this a fork to add support for latest Laravel & PHP versions with enhanced features including size parameter and WebP support.
 
 This package provides a convenient way to extract a favicon from any website by using the appropriate Google service. It allows you to fetch and save it to your local storage.
+
+## Requirements
+
+- PHP 8.2 or higher
+- Laravel 10.0 or higher
+- GD extension (for image processing)
 
 ## Usage
 
@@ -19,7 +25,9 @@ Usage is very simple. You can either pull it in via Dependency Injection or use 
 ### General
 
 - If no favicon could be found, it returns a default one.
-- The favicon's extension is always `.png`. It's not necessary to be part of your filename.
+- All favicons are returned in WebP format (`.webp` extension) for better compression and modern web compatibility.
+- All images are automatically resized to the specified dimensions (default: 128x128) while maintaining aspect ratio.
+- It's not necessary to include the file extension in your filename as it will be added automatically.
 
 ### Fetch the favicon only
 
@@ -29,6 +37,14 @@ $favicon = FaviconExtractor::fromUrl('https://laravel.com')->fetchOnly();
 
 It returns a instance which implements `FaviconInterface` where you can retrieve the raw content of the favicon with `$favicon->getContent()`. 
 
+#### With custom size
+
+```php
+$favicon = FaviconExtractor::fromUrl('https://laravel.com', 64)->fetchOnly();
+```
+
+The size parameter defaults to 128px and will be used by supported providers (like Google) and for image resizing.
+
 ### Fetch and download the favicon 
 
 If you prefer to save the favicon to your local storage, you can. The only requirement is to define the path, where the favicon should be saved. It's relative to your root path which you defined in `config/filesystems.php`. Saying your path to save is `favicons`, it will be saved to `app/storage/favicons`.
@@ -37,14 +53,20 @@ If you prefer to save the favicon to your local storage, you can. The only requi
 
 ```php
 FaviconExtractor::fromUrl('https://laravel.com')->fetchAndSaveTo('favicons');
-// returns favicons/HIgLtwL0iUdNkwfq.png
+// returns favicons/HIgLtwL0iUdNkwfq.webp
+
+FaviconExtractor::fromUrl('https://laravel.com', 256)->fetchAndSaveTo('favicons');
+// returns favicons/HIgLtwL0iUdNkwfq.webp (resized to 256x256)
 ```
 
 #### With a custom filename
 
 ```php
 FaviconExtractor::fromUrl('https://laravel.com')->fetchAndSaveTo('favicons', 'myFilename');
-// returns favicons/myFilename.png
+// returns favicons/myFilename.webp
+
+FaviconExtractor::fromUrl('https://laravel.com', 64)->fetchAndSaveTo('favicons', 'myFilename');
+// returns favicons/myFilename.webp (resized to 64x64)
 ```
 
 ## Installation
@@ -56,7 +78,7 @@ $ composer config repositories.laravel-favicon-extractor vcs https://github.com/
 $ composer require charlesteh/laravel-favicon-extractor:dev-master
 ```
 
-Thanks to Laravel 5.5+ Package Auto-Discovery, there is no need to add the ServiceProvider manually. If you don't use auto-discovery, add the ServiceProvider to the providers array in `config/app.php`.
+Thanks to Laravel Package Auto-Discovery, there is no need to add the ServiceProvider manually. If you don't use auto-discovery, add the ServiceProvider to the providers array in `config/app.php`.
 
 ```php
 StefanBauer\LaravelFaviconExtractor\FaviconExtractorServiceProvider::class,

@@ -8,7 +8,7 @@ use GrahamCampbell\GuzzleFactory\GuzzleFactory;
 
 class GitHubProvider implements ProviderInterface
 {
-    public function fetchFromUrl(string $url): string
+    public function fetchFromUrl(string $url, ?int $size = null): string
     {
         $client = GuzzleFactory::make();
         $response = $client->get($this->getUrl($url));

@@ -12,25 +12,30 @@ use StefanBauer\LaravelFaviconExtractor\Favicon\FaviconFactoryInterface;
 use StefanBauer\LaravelFaviconExtractor\Favicon\FaviconInterface;
 use StefanBauer\LaravelFaviconExtractor\Generator\FilenameGeneratorInterface;
 use StefanBauer\LaravelFaviconExtractor\Provider\ProviderInterface;
+use StefanBauer\LaravelFaviconExtractor\Processor\ImageProcessorInterface;
 
 class FaviconExtractor implements FaviconExtractorInterface
 {
     private $faviconFactory;
     private $provider;
     private $filenameGenerator;
+    private $imageProcessor;
     private $url;
+    private $size;
     private $favicon;
 
-    public function __construct(FaviconFactoryInterface $faviconFactory, ProviderInterface $provider, FilenameGeneratorInterface $filenameGenerator)
+    public function __construct(FaviconFactoryInterface $faviconFactory, ProviderInterface $provider, FilenameGeneratorInterface $filenameGenerator, ImageProcessorInterface $imageProcessor)
     {
         $this->provider = $provider;
         $this->faviconFactory = $faviconFactory;
         $this->filenameGenerator = $filenameGenerator;
+        $this->imageProcessor = $imageProcessor;
     }
 
-    public function fromUrl(string $url): FaviconExtractorInterface
+    public function fromUrl(string $url, int $size = 128): FaviconExtractorInterface
     {
         $this->url = $url;
+        $this->size = $size;
 
         return $this;
     }
@@ -42,9 +47,10 @@ class FaviconExtractor implements FaviconExtractorInterface
 
     public function fetchOnly(): FaviconInterface
     {
-        $this->favicon = $this->faviconFactory->create(
-            $this->provider->fetchFromUrl($this->getUrl())
-        );
+        $rawContent = $this->provider->fetchFromUrl($this->getUrl(), $this->size);
+        $processedContent = $this->imageProcessor->convertToWebP($rawContent, $this->size, config('favicon-extractor.webp_quality', 85));
+        
+        $this->favicon = $this->faviconFactory->create($processedContent);
 
         return $this->favicon;
     }
@@ -70,6 +76,6 @@ class FaviconExtractor implements FaviconExtractorInterface
 
     private function getTargetPath(string $path, string $filename): string
     {
-        return $path.DIRECTORY_SEPARATOR.$filename.'.png';
+        return $path.DIRECTORY_SEPARATOR.$filename.'.webp';
     }
 }

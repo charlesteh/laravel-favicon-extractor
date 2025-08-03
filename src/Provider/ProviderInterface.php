@@ -6,5 +6,5 @@ namespace StefanBauer\LaravelFaviconExtractor\Provider;
 
 interface ProviderInterface
 {
-    public function fetchFromUrl(string $url): string;
+    public function fetchFromUrl(string $url, ?int $size = null): string;
 }

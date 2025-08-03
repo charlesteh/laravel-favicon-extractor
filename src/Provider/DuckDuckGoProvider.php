@@ -8,7 +8,7 @@ use GrahamCampbell\GuzzleFactory\GuzzleFactory;
 
 class DuckDuckGoProvider implements ProviderInterface
 {
-    public function fetchFromUrl(string $url): string
+    public function fetchFromUrl(string $url, ?int $size = null): string
     {
         $client = GuzzleFactory::make();
       
